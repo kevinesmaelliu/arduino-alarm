@@ -1,0 +1,35 @@
+{
+  "name": "ESP32 Timer Control",
+  "short_name": "ESP32 Timer",
+  "description": "Control your ESP32 timer device via Web Bluetooth",
+  "start_url": "/",
+  "display": "standalone",
+  "background_color": "#FEF7FF",
+  "theme_color": "#6750A4",
+  "orientation": "portrait-primary",
+  "icons": [
+    {
+      "src": "data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 192 192'%3E%3Crect fill='%236750A4' width='192' height='192' rx='48'/%3E%3Cpath fill='white' d='M96 48c-26.5 0-48 21.5-48 48s21.5 48 48 48 48-21.5 48-48-21.5-48-48-48zm0 84c-19.9 0-36-16.1-36-36s16.1-36 36-36 36 16.1 36 36-16.1 36-36 36z'/%3E%3Cpath fill='white' d='M96 64v32l24 14.4'/%3E%3C/svg%3E",
+      "sizes": "192x192",
+      "type": "image/svg+xml",
+      "purpose": "any maskable"
+    },
+    {
+      "src": "data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 512 512'%3E%3Crect fill='%236750A4' width='512' height='512' rx='128'/%3E%3Cpath fill='white' d='M256 128c-70.7 0-128 57.3-128 128s57.3 128 128 128 128-57.3 128-128-57.3-128-128-128zm0 224c-53 0-96-43-96-96s43-96 96-96 96 43 96 96-43 96-96 96z'/%3E%3Cpath fill='white' d='M256 170.7v85.3l64 38.4'/%3E%3C/svg%3E",
+      "sizes": "512x512",
+      "type": "image/svg+xml",
+      "purpose": "any maskable"
+    }
+  ],
+  "categories": ["utilities", "productivity"],
+  "screenshots": [],
+  "shortcuts": [
+    {
+      "name": "Quick Connect",
+      "short_name": "Connect",
+      "description": "Connect to ESP32 device",
+      "url": "/",
+      "icons": []
+    }
+  ]
+}
