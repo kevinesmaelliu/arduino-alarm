@@ -3,56 +3,56 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta name="theme-color" content="#6750A4">
-    <title>ESP32 Timer Control</title>
+    <meta name="theme-color" content="#FFD600">
+    <title>Shock Alert - Vibration Controller</title>
     <link rel="manifest" href="manifest.json">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;700&display=swap" rel="stylesheet">
     <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Rounded:opsz,wght,FILL,GRAD@24,400,0,0" rel="stylesheet">
     <style>
-        /* Material 3 Design Tokens - Expressive Theme */
+        /* Material 3 Design Tokens - Shock Expressive Theme */
         :root {
-            /* Primary Colors */
-            --md-sys-color-primary: #6750A4;
-            --md-sys-color-on-primary: #FFFFFF;
-            --md-sys-color-primary-container: #EADDFF;
-            --md-sys-color-on-primary-container: #21005D;
+            /* Primary Colors - Electric Yellow */
+            --md-sys-color-primary: #FFD600;
+            --md-sys-color-on-primary: #1A1A1A;
+            --md-sys-color-primary-container: #FFF59D;
+            --md-sys-color-on-primary-container: #3E2723;
 
-            /* Secondary Colors */
-            --md-sys-color-secondary: #625B71;
+            /* Secondary Colors - Dark Gray */
+            --md-sys-color-secondary: #37474F;
             --md-sys-color-on-secondary: #FFFFFF;
-            --md-sys-color-secondary-container: #E8DEF8;
-            --md-sys-color-on-secondary-container: #1D192B;
+            --md-sys-color-secondary-container: #546E7A;
+            --md-sys-color-on-secondary-container: #ECEFF1;
 
-            /* Tertiary Colors */
-            --md-sys-color-tertiary: #7D5260;
+            /* Tertiary Colors - Orange Red */
+            --md-sys-color-tertiary: #FF6F00;
             --md-sys-color-on-tertiary: #FFFFFF;
-            --md-sys-color-tertiary-container: #FFD8E4;
-            --md-sys-color-on-tertiary-container: #31111D;
+            --md-sys-color-tertiary-container: #FFCC80;
+            --md-sys-color-on-tertiary-container: #3E2723;
 
             /* Error Colors */
-            --md-sys-color-error: #B3261E;
+            --md-sys-color-error: #D32F2F;
             --md-sys-color-on-error: #FFFFFF;
-            --md-sys-color-error-container: #F9DEDC;
-            --md-sys-color-on-error-container: #410E0B;
+            --md-sys-color-error-container: #FFCDD2;
+            --md-sys-color-on-error-container: #B71C1C;
 
-            /* Surface Colors */
-            --md-sys-color-surface: #FEF7FF;
-            --md-sys-color-on-surface: #1D1B20;
-            --md-sys-color-surface-variant: #E7E0EC;
-            --md-sys-color-on-surface-variant: #49454F;
-            --md-sys-color-surface-container: #F3EDF7;
-            --md-sys-color-surface-container-high: #ECE6F0;
-            --md-sys-color-surface-container-highest: #E6E0E9;
+            /* Surface Colors - Dark Theme */
+            --md-sys-color-surface: #121212;
+            --md-sys-color-on-surface: #E0E0E0;
+            --md-sys-color-surface-variant: #1E1E1E;
+            --md-sys-color-on-surface-variant: #BDBDBD;
+            --md-sys-color-surface-container: #1A1A1A;
+            --md-sys-color-surface-container-high: #212121;
+            --md-sys-color-surface-container-highest: #2C2C2C;
 
             /* Outline Colors */
-            --md-sys-color-outline: #79747E;
-            --md-sys-color-outline-variant: #CAC4D0;
+            --md-sys-color-outline: #616161;
+            --md-sys-color-outline-variant: #424242;
 
-            /* Success Colors */
-            --md-sys-color-success: #00C853;
-            --md-sys-color-on-success: #FFFFFF;
+            /* Success Colors - Electric Green */
+            --md-sys-color-success: #76FF03;
+            --md-sys-color-on-success: #1A1A1A;
 
             /* Typography Scale */
             --md-sys-typescale-display-large: 57px;
@@ -157,8 +157,8 @@
         }
 
         .connection-badge.connected {
-            background-color: #C8E6C9;
-            color: #1B5E20;
+            background-color: var(--md-sys-color-primary-container);
+            color: var(--md-sys-color-on-primary-container);
         }
 
         .connection-badge.connecting {
@@ -370,52 +370,100 @@
             color: var(--md-sys-color-on-surface);
         }
 
-        /* LED Status */
-        .led-status {
+        /* Vibration Status */
+        .vibration-status {
             display: flex;
             align-items: center;
             justify-content: center;
             margin-bottom: 24px;
         }
 
-        .led-indicator {
-            width: 120px;
-            height: 120px;
+        .vibration-indicator {
+            width: 160px;
+            height: 160px;
             border-radius: 50%;
             position: relative;
             transition: all var(--md-sys-motion-duration-medium4) var(--md-sys-motion-easing-emphasized);
             box-shadow: var(--md-sys-elevation-3);
+            display: flex;
+            align-items: center;
+            justify-content: center;
         }
 
-        .led-indicator.off {
-            background: linear-gradient(135deg, #E0E0E0 0%, #BDBDBD 100%);
+        .vibration-indicator.off {
+            background: linear-gradient(135deg, #424242 0%, #212121 100%);
+            border: 3px solid var(--md-sys-color-outline);
         }
 
-        .led-indicator.on {
-            background: linear-gradient(135deg, #4CAF50 0%, #81C784 100%);
-            box-shadow: 0 0 40px rgba(76, 175, 80, 0.6), var(--md-sys-elevation-3);
-            animation: glow 2s ease-in-out infinite;
+        .vibration-indicator.on {
+            background: linear-gradient(135deg, #FFD600 0%, #FFA000 100%);
+            box-shadow: 0 0 60px rgba(255, 214, 0, 0.8), 0 0 100px rgba(255, 214, 0, 0.4), var(--md-sys-elevation-5);
+            animation: shockPulse 0.3s ease-in-out infinite, electricGlow 2s ease-in-out infinite;
+            border: 3px solid #FFD600;
         }
 
-        @keyframes glow {
+        @keyframes shockPulse {
             0%, 100% {
-                box-shadow: 0 0 40px rgba(76, 175, 80, 0.6), var(--md-sys-elevation-3);
+                transform: scale(1) rotate(0deg);
+            }
+            25% {
+                transform: scale(1.05) rotate(2deg);
             }
             50% {
-                box-shadow: 0 0 60px rgba(76, 175, 80, 0.8), var(--md-sys-elevation-3);
+                transform: scale(0.98) rotate(-2deg);
+            }
+            75% {
+                transform: scale(1.03) rotate(1deg);
             }
         }
 
-        .led-indicator::after {
+        @keyframes electricGlow {
+            0%, 100% {
+                box-shadow: 0 0 60px rgba(255, 214, 0, 0.8), 0 0 100px rgba(255, 214, 0, 0.4), var(--md-sys-elevation-5);
+            }
+            50% {
+                box-shadow: 0 0 80px rgba(255, 214, 0, 1), 0 0 120px rgba(255, 214, 0, 0.6), var(--md-sys-elevation-5);
+            }
+        }
+
+        .vibration-indicator .material-symbols-rounded {
+            font-size: 80px;
+            color: var(--md-sys-color-surface-variant);
+            font-variation-settings: 'FILL' 0, 'wght' 300, 'GRAD' 0, 'opsz' 48;
+            position: relative;
+            z-index: 2;
+        }
+
+        .vibration-indicator.on .material-symbols-rounded {
+            color: var(--md-sys-color-on-primary);
+            font-variation-settings: 'FILL' 1, 'wght' 700, 'GRAD' 0, 'opsz' 48;
+        }
+
+        .vibration-indicator::before {
             content: '';
             position: absolute;
-            top: 20%;
-            left: 20%;
-            width: 40%;
-            height: 40%;
-            background: rgba(255, 255, 255, 0.3);
+            width: 100%;
+            height: 100%;
             border-radius: 50%;
-            filter: blur(10px);
+            background: radial-gradient(circle, rgba(255, 214, 0, 0.3) 0%, transparent 70%);
+            opacity: 0;
+            transition: opacity var(--md-sys-motion-duration-medium2);
+        }
+
+        .vibration-indicator.on::before {
+            opacity: 1;
+            animation: shockwave 1s ease-out infinite;
+        }
+
+        @keyframes shockwave {
+            0% {
+                transform: scale(0.8);
+                opacity: 1;
+            }
+            100% {
+                transform: scale(1.5);
+                opacity: 0;
+            }
         }
 
         /* Text Fields */
@@ -495,8 +543,13 @@
         }
 
         .btn-success {
-            background-color: #C8E6C9;
-            color: #1B5E20;
+            background-color: var(--md-sys-color-primary);
+            color: var(--md-sys-color-on-primary);
+            font-weight: 700;
+        }
+
+        .btn-success:hover {
+            box-shadow: 0 0 20px rgba(255, 214, 0, 0.5), var(--md-sys-elevation-3);
         }
 
         .btn-error {
@@ -709,8 +762,8 @@
         <!-- Top App Bar -->
         <div class="top-app-bar">
             <div class="app-title">
-                <span class="material-symbols-rounded">timer</span>
-                ESP32 Timer Control
+                <span class="material-symbols-rounded">bolt</span>
+                Shock Alert
             </div>
             <div class="connection-badge disconnected" id="connectionBadge">
                 <span class="status-indicator disconnected" id="statusIndicator"></span>
@@ -720,38 +773,44 @@
 
         <!-- Landing Page -->
         <div class="landing-page" id="landingPage">
-            <span class="material-symbols-rounded landing-icon">bluetooth</span>
-            <h1 class="landing-title">Connect to Your Timer</h1>
+            <span class="material-symbols-rounded landing-icon">bolt</span>
+            <h1 class="landing-title">Connect Vibration Device</h1>
             <p class="landing-subtitle">
-                Connect to your ESP32 timer device via Bluetooth to control schedules,
-                set times, and monitor status in real-time.
+                Connect to your ESP32 vibration device via Bluetooth to control shock alerts,
+                set schedules, and monitor activity in real-time.
             </p>
             <button class="btn btn-filled btn-large" id="connectBtn">
                 <span class="material-symbols-rounded">bluetooth_searching</span>
                 Connect to Device
             </button>
+            <button class="btn btn-outlined btn-large" id="demoBtn" style="margin-top: 16px;">
+                <span class="material-symbols-rounded">visibility</span>
+                Demo Mode
+            </button>
         </div>
 
         <!-- Main Content -->
         <div class="main-content" id="mainContent">
-            <!-- LED Status & Manual Controls -->
+            <!-- Vibration Status & Manual Controls -->
             <div class="grid">
                 <div class="card">
                     <h2 class="card-title">
-                        <span class="material-symbols-rounded">lightbulb</span>
-                        Device Status
+                        <span class="material-symbols-rounded">vibration</span>
+                        Vibration Status
                     </h2>
-                    <div class="led-status">
-                        <div class="led-indicator off" id="ledIndicator"></div>
+                    <div class="vibration-status">
+                        <div class="vibration-indicator off" id="vibrationIndicator">
+                            <span class="material-symbols-rounded">vibration</span>
+                        </div>
                     </div>
                     <div class="manual-controls">
                         <button class="btn btn-success control-btn" id="turnOnBtn">
-                            <span class="material-symbols-rounded">power_settings_new</span>
-                            Turn On
+                            <span class="material-symbols-rounded">bolt</span>
+                            Activate
                         </button>
                         <button class="btn btn-error control-btn" id="turnOffBtn">
-                            <span class="material-symbols-rounded">power_settings_new</span>
-                            Turn Off
+                            <span class="material-symbols-rounded">block</span>
+                            Deactivate
                         </button>
                     </div>
                 </div>
@@ -760,23 +819,23 @@
                 <div class="card">
                     <h2 class="card-title">
                         <span class="material-symbols-rounded">flash_on</span>
-                        Quick Timers
+                        Quick Shock Timers
                     </h2>
                     <div class="quick-actions">
                         <button class="btn btn-tonal quick-action-btn" data-minutes="1">
-                            <span class="material-symbols-rounded">schedule</span>
+                            <span class="material-symbols-rounded">bolt</span>
                             <span>1 min</span>
                         </button>
                         <button class="btn btn-tonal quick-action-btn" data-minutes="5">
-                            <span class="material-symbols-rounded">schedule</span>
+                            <span class="material-symbols-rounded">bolt</span>
                             <span>5 min</span>
                         </button>
                         <button class="btn btn-tonal quick-action-btn" data-minutes="10">
-                            <span class="material-symbols-rounded">schedule</span>
+                            <span class="material-symbols-rounded">bolt</span>
                             <span>10 min</span>
                         </button>
                         <button class="btn btn-tonal quick-action-btn" data-minutes="30">
-                            <span class="material-symbols-rounded">schedule</span>
+                            <span class="material-symbols-rounded">bolt</span>
                             <span>30 min</span>
                         </button>
                     </div>
@@ -803,14 +862,14 @@
                 <div class="card">
                     <h2 class="card-title">
                         <span class="material-symbols-rounded">alarm_on</span>
-                        Schedule Timer
+                        Shock Schedule
                     </h2>
                     <div class="text-field">
-                        <label>Turn On At</label>
+                        <label>Activate At</label>
                         <input type="time" id="onTime">
                     </div>
                     <div class="text-field">
-                        <label>Turn Off At</label>
+                        <label>Deactivate At</label>
                         <input type="time" id="offTime">
                     </div>
                     <div style="display: flex; gap: 12px;">
@@ -895,20 +954,38 @@
         const TX_CHARACTERISTIC_UUID = 'd289a002-a393-11f0-8de9-0242ac120002';
 
         // Global variables
+        const APP_VERSION = 'ble-monitor-2025-11-11-01';
+        const DEBUG = true;
+        const debugLog = (...args) => {
+            if (DEBUG) {
+                console.log('[BLE DEBUG]', ...args);
+            }
+        };
+        debugLog('App script loaded', { version: APP_VERSION });
+
         let bluetoothDevice = null;
         let rxCharacteristic = null;
         let txCharacteristic = null;
         let isConnected = false;
+        let gattServer = null;
+        let reconnecting = false;
+        let manualDisconnect = false;
+        let connectionMonitorInterval = null;
+        let commandQueue = [];
+        let processingQueue = false;
+
+        const COMMAND_RETRY_DELAY_MS = 150;
 
         // DOM Elements
         const landingPage = document.getElementById('landingPage');
         const mainContent = document.getElementById('mainContent');
         const connectBtn = document.getElementById('connectBtn');
+        const demoBtn = document.getElementById('demoBtn');
         const disconnectBtn = document.getElementById('disconnectBtn');
         const connectionBadge = document.getElementById('connectionBadge');
         const statusIndicator = document.getElementById('statusIndicator');
         const connectionText = document.getElementById('connectionText');
-        const ledIndicator = document.getElementById('ledIndicator');
+        const vibrationIndicator = document.getElementById('vibrationIndicator');
         const turnOnBtn = document.getElementById('turnOnBtn');
         const turnOffBtn = document.getElementById('turnOffBtn');
         const setTimeBtn = document.getElementById('setTimeBtn');
@@ -920,6 +997,23 @@
         const connectionState = document.getElementById('connectionState');
         const deviceTime = document.getElementById('deviceTime');
         const nextAction = document.getElementById('nextAction');
+        const quickActionButtons = Array.from(document.querySelectorAll('.quick-action-btn'));
+        const interactiveButtons = [
+            turnOnBtn,
+            turnOffBtn,
+            setTimeBtn,
+            setScheduleBtn,
+            getStatusBtn,
+            ...quickActionButtons
+        ];
+
+        function setControlsEnabled(enabled) {
+            interactiveButtons.forEach(btn => {
+                if (btn) {
+                    btn.disabled = !enabled;
+                }
+            });
+        }
 
         // Initialize
         document.addEventListener('DOMContentLoaded', () => {
@@ -928,6 +1022,9 @@
 
             // Update start time
             document.getElementById('startTime').textContent = getCurrentTime();
+
+            // Disable control buttons until connected or demo mode
+            setControlsEnabled(false);
 
             // Check if Web Bluetooth is supported
             if (!navigator.bluetooth) {
@@ -938,52 +1035,107 @@
 
         // Event Listeners
         connectBtn.addEventListener('click', connectToDevice);
+        demoBtn.addEventListener('click', enterDemoMode);
         disconnectBtn.addEventListener('click', disconnectDevice);
-        turnOnBtn.addEventListener('click', () => sendCommand('TURN_ON'));
-        turnOffBtn.addEventListener('click', () => sendCommand('TURN_OFF'));
+        turnOnBtn.addEventListener('click', () => {
+            if (isConnected) {
+                sendCommand('TURN_ON');
+            } else {
+                // Demo mode - just toggle the UI
+                vibrationIndicator.classList.remove('off');
+                vibrationIndicator.classList.add('on');
+                showSnackbar('Demo: Vibration activated', 'info');
+            }
+        });
+        turnOffBtn.addEventListener('click', () => {
+            if (isConnected) {
+                sendCommand('TURN_OFF');
+            } else {
+                // Demo mode - just toggle the UI
+                vibrationIndicator.classList.remove('on');
+                vibrationIndicator.classList.add('off');
+                showSnackbar('Demo: Vibration deactivated', 'info');
+            }
+        });
         setTimeBtn.addEventListener('click', setCurrentTime);
         setScheduleBtn.addEventListener('click', setSchedule);
         getStatusBtn.addEventListener('click', () => sendCommand('STATUS'));
 
         // Quick action buttons
-        document.querySelectorAll('.quick-action-btn').forEach(btn => {
+        quickActionButtons.forEach(btn => {
             btn.addEventListener('click', () => {
                 const minutes = parseInt(btn.dataset.minutes);
-                setQuickTimer(minutes);
+                if (isConnected) {
+                    setQuickTimer(minutes);
+                } else {
+                    // Demo mode
+                    vibrationIndicator.classList.remove('off');
+                    vibrationIndicator.classList.add('on');
+                    showSnackbar(`Demo: ${minutes} minute shock timer activated`, 'info');
+                }
             });
         });
+
+        // Enter Demo Mode
+        function enterDemoMode() {
+            landingPage.style.display = 'none';
+            mainContent.classList.add('active');
+            deviceName.textContent = 'Demo Device';
+            connectionState.textContent = 'Demo Mode';
+            showSnackbar('Demo mode activated - test the UI!', 'info');
+            addLogEntry('Demo mode activated', 'info');
+            setControlsEnabled(true);
+        }
 
         // Connect to Bluetooth Device
         async function connectToDevice() {
             try {
+                // Check if Web Bluetooth is available
+                if (!navigator.bluetooth) {
+                    showSnackbar('Web Bluetooth is not supported in this browser. Please use Chrome, Edge, or Opera.', 'error');
+                    addLogEntry('Web Bluetooth not supported', 'error');
+                    return;
+                }
+
+                debugLog('Starting Bluetooth scan...');
                 updateConnectionStatus('connecting');
                 addLogEntry('Searching for Bluetooth devices...', 'bluetooth_searching');
 
                 // Request Bluetooth device
+                // Option 1: Filter by name (if you know your device name)
+                // bluetoothDevice = await navigator.bluetooth.requestDevice({
+                //     filters: [{ name: DEVICE_NAME }],
+                //     optionalServices: [SERVICE_UUID]
+                // });
+
+                // Option 2: Show all Bluetooth devices with the service
+                // bluetoothDevice = await navigator.bluetooth.requestDevice({
+                //     filters: [{ services: [SERVICE_UUID] }]
+                // });
+
+                // Option 3: Show all Bluetooth devices (most permissive)
+                debugLog('Requesting Bluetooth device...');
                 bluetoothDevice = await navigator.bluetooth.requestDevice({
-                    filters: [{ name: DEVICE_NAME }],
+                    acceptAllDevices: true,
                     optionalServices: [SERVICE_UUID]
                 });
 
+                debugLog('Device selected:', bluetoothDevice);
                 addLogEntry(`Found device: ${bluetoothDevice.name}`, 'check_circle');
 
                 // Connect to GATT Server
-                const server = await bluetoothDevice.gatt.connect();
+                gattServer = await bluetoothDevice.gatt.connect();
+                debugLog('GATT server connected:', {
+                    connected: gattServer.connected,
+                    deviceId: bluetoothDevice.id
+                });
                 addLogEntry('Connected to GATT server', 'link');
 
-                // Get Service
-                const service = await server.getPrimaryService(SERVICE_UUID);
-                addLogEntry('Service discovered', 'settings');
+                bluetoothDevice.removeEventListener('gattserverdisconnected', handleDisconnection);
+                bluetoothDevice.addEventListener('gattserverdisconnected', handleDisconnection);
 
-                // Get Characteristics
-                rxCharacteristic = await service.getCharacteristic(RX_CHARACTERISTIC_UUID);
-                txCharacteristic = await service.getCharacteristic(TX_CHARACTERISTIC_UUID);
-
-                // Start notifications
-                await txCharacteristic.startNotifications();
-                txCharacteristic.addEventListener('characteristicvaluechanged', handleNotification);
-
-                addLogEntry('Characteristics configured', 'tune');
+                await setupCharacteristics(gattServer);
+                manualDisconnect = false;
 
                 // Update UI
                 isConnected = true;
@@ -995,6 +1147,9 @@
                 connectionState.textContent = 'Connected';
 
                 showSnackbar('Successfully connected to device', 'success');
+                startConnectionMonitor();
+                setControlsEnabled(true);
+                await processCommandQueue();
 
                 // Get initial status
                 setTimeout(() => sendCommand('STATUS'), 1000);
@@ -1004,14 +1159,30 @@
                 updateConnectionStatus('disconnected');
                 addLogEntry(`Connection failed: ${error.message}`, 'error');
                 showSnackbar(`Connection failed: ${error.message}`, 'error');
+                debugLog('Connection exception details:', error);
+                stopConnectionMonitor();
             }
         }
 
         // Disconnect Device
         async function disconnectDevice() {
+            debugLog('Manual disconnect requested');
+            manualDisconnect = true;
             if (bluetoothDevice && bluetoothDevice.gatt.connected) {
                 bluetoothDevice.gatt.disconnect();
                 addLogEntry('Device disconnected', 'bluetooth_disabled');
+                debugLog('Manual disconnect complete');
+            }
+
+            stopConnectionMonitor();
+            setControlsEnabled(false);
+
+            if (txCharacteristic) {
+                try {
+                    txCharacteristic.removeEventListener('characteristicvaluechanged', handleNotification);
+                } catch (err) {
+                    console.warn('Failed to remove notification listener', err);
+                }
             }
 
             isConnected = false;
@@ -1024,27 +1195,311 @@
             deviceTime.textContent = '--:--:--';
             nextAction.textContent = '--';
 
+            rxCharacteristic = null;
+            txCharacteristic = null;
+            gattServer = null;
+
             showSnackbar('Device disconnected', 'info');
         }
 
-        // Send Command
-        async function sendCommand(command) {
-            if (!isConnected || !rxCharacteristic) {
-                showSnackbar('Not connected to device', 'error');
+        // Handle unexpected disconnections
+        function handleDisconnection() {
+            console.warn('Bluetooth device disconnected');
+            debugLog('handleDisconnection fired', {
+                manualDisconnect,
+                reconnecting,
+                devicePresent: !!bluetoothDevice
+            });
+
+            if (manualDisconnect) {
+                manualDisconnect = false;
+                stopConnectionMonitor();
                 return;
             }
 
-            try {
-                const encoder = new TextEncoder();
-                const data = encoder.encode(command);
-                await rxCharacteristic.writeValue(data);
+            isConnected = false;
+            rxCharacteristic = null;
+            txCharacteristic = null;
+            gattServer = null;
 
-                addLogEntry(`Sent: ${command}`, 'send');
+            stopConnectionMonitor();
+
+            updateConnectionStatus('disconnected');
+            connectionState.textContent = 'Disconnected';
+            addLogEntry('Connection lost', 'bluetooth_disabled');
+            showSnackbar('Device disconnected. Attempting to reconnect...', 'warning');
+
+            setTimeout(() => {
+                debugLog('Triggering reconnect from handleDisconnection');
+                attemptReconnect();
+            }, 1000);
+        }
+
+        function startConnectionMonitor() {
+            stopConnectionMonitor();
+
+            connectionMonitorInterval = setInterval(async () => {
+                if (!bluetoothDevice || manualDisconnect) {
+                    debugLog('Connection monitor skipped', {
+                        devicePresent: !!bluetoothDevice,
+                        manualDisconnect
+                    });
+                    return;
+                }
+
+                const stillConnected = bluetoothDevice.gatt?.connected && rxCharacteristic;
+
+                if (!stillConnected && !reconnecting) {
+                    debugLog('Connection monitor detected drop; attempting reconnect');
+                    await attemptReconnect();
+                } else {
+                    debugLog('Connection monitor heartbeat', {
+                        connected: stillConnected,
+                        reconnecting
+                    });
+                }
+            }, 5000);
+
+            debugLog('Connection monitor started', { intervalMs: 5000 });
+
+            // Immediate heartbeat log so we see an entry without waiting for the first interval
+            if (bluetoothDevice) {
+                const stillConnected = bluetoothDevice.gatt?.connected && rxCharacteristic;
+                debugLog('Connection monitor initial heartbeat', {
+                    connected: stillConnected,
+                    reconnecting
+                });
+            }
+        }
+
+        function stopConnectionMonitor() {
+            if (connectionMonitorInterval) {
+                clearInterval(connectionMonitorInterval);
+                connectionMonitorInterval = null;
+                debugLog('Connection monitor stopped');
+            }
+        }
+
+        function enqueueCommand(command, { priority = false } = {}) {
+            if (priority) {
+                commandQueue.unshift(command);
+            } else {
+                commandQueue.push(command);
+            }
+            debugLog('Command queued', { command, queueLength: commandQueue.length, priority });
+        }
+
+        async function processCommandQueue() {
+            if (processingQueue || commandQueue.length === 0) {
+                return;
+            }
+
+            if (!await ensureConnected()) {
+                debugLog('Queue processing paused - connection not ready');
+                return;
+            }
+
+            processingQueue = true;
+            try {
+                debugLog('Processing command queue', { pending: [...commandQueue] });
+                const queued = [...commandQueue];
+                commandQueue = [];
+                for (const cmd of queued) {
+                    await sendCommand(cmd, { fromQueue: true });
+                    await delay(COMMAND_RETRY_DELAY_MS);
+                }
+            } finally {
+                processingQueue = false;
+            }
+        }
+
+        function delay(ms) {
+            return new Promise(resolve => setTimeout(resolve, ms));
+        }
+
+        async function ensureConnected() {
+            debugLog('ensureConnected invoked', {
+                devicePresent: !!bluetoothDevice,
+                gattConnected: bluetoothDevice?.gatt?.connected,
+                hasRxCharacteristic: !!rxCharacteristic,
+                reconnecting
+            });
+            if (!bluetoothDevice) {
+                return false;
+            }
+
+            if (bluetoothDevice.gatt.connected && rxCharacteristic) {
+                return true;
+            }
+
+            return await attemptReconnect();
+        }
+
+        async function attemptReconnect() {
+            if (!bluetoothDevice || reconnecting || manualDisconnect) {
+                debugLog('Skipping attemptReconnect', {
+                    devicePresent: !!bluetoothDevice,
+                    reconnecting,
+                    manualDisconnect
+                });
+                return false;
+            }
+
+            reconnecting = true;
+            updateConnectionStatus('connecting');
+            addLogEntry('Attempting to reconnect...', 'settings_backup_restore');
+            debugLog('attemptReconnect started');
+
+            try {
+                gattServer = await bluetoothDevice.gatt.connect();
+                debugLog('Reconnected GATT server', {
+                    connected: gattServer.connected
+                });
+                addLogEntry('Reconnected to GATT server', 'link');
+                await setupCharacteristics(gattServer);
+
+                isConnected = true;
+                updateConnectionStatus('connected');
+                connectionState.textContent = 'Connected';
+                showSnackbar('Reconnected to device', 'success');
+                debugLog('Reconnection successful');
+                startConnectionMonitor();
+                setControlsEnabled(true);
+                await processCommandQueue();
+                return true;
+            } catch (error) {
+                console.error('Reconnection failed:', error);
+                addLogEntry(`Reconnect failed: ${error.message}`, 'error');
+                showSnackbar(`Reconnect failed: ${error.message}`, 'error');
+                updateConnectionStatus('disconnected');
+                debugLog('Reconnection error details:', error);
+                return false;
+            } finally {
+                debugLog('attemptReconnect finished');
+                reconnecting = false;
+            }
+        }
+
+        async function setupCharacteristics(server) {
+            if (!server) {
+                debugLog('setupCharacteristics called with no server');
+                throw new Error('No GATT server available');
+            }
+
+            const service = await server.getPrimaryService(SERVICE_UUID);
+            addLogEntry('Service discovered', 'settings');
+             debugLog('Primary service obtained');
+
+            if (txCharacteristic) {
+                try {
+                    txCharacteristic.removeEventListener('characteristicvaluechanged', handleNotification);
+                } catch (err) {
+                    console.warn('Failed to remove previous notification listener', err);
+                    debugLog('Failed removing old notification listener', err);
+                }
+            }
+
+            rxCharacteristic = await service.getCharacteristic(RX_CHARACTERISTIC_UUID);
+            txCharacteristic = await service.getCharacteristic(TX_CHARACTERISTIC_UUID);
+            debugLog('Characteristics fetched', {
+                hasRx: !!rxCharacteristic,
+                hasTx: !!txCharacteristic
+            });
+
+            await txCharacteristic.startNotifications();
+            txCharacteristic.addEventListener('characteristicvaluechanged', handleNotification);
+            addLogEntry('Characteristics configured', 'tune');
+            debugLog('Notifications started');
+        }
+
+        async function writeCommand(command) {
+            if (!rxCharacteristic) {
+                throw new Error('RX characteristic unavailable');
+            }
+
+            const encoder = new TextEncoder();
+            const data = encoder.encode(command);
+            const usingWriteWithResponse = typeof rxCharacteristic.writeValueWithResponse === 'function';
+
+            debugLog('Writing to characteristic', {
+                length: data.length,
+                usingWriteWithResponse
+            });
+
+            if (usingWriteWithResponse) {
+                await rxCharacteristic.writeValueWithResponse(data);
+            } else {
+                await rxCharacteristic.writeValue(data);
+            }
+        }
+
+        // Send Command
+        async function sendCommand(command, options = {}) {
+            const { fromQueue = false } = options;
+            debugLog('sendCommand called', { command, fromQueue });
+
+            if (reconnecting && !fromQueue) {
+                enqueueCommand(command);
+                showSnackbar('Device reconnecting, command queued', 'info');
+                updateConnectionStatus('connecting');
+                setControlsEnabled(false);
+                return false;
+            }
+
+            if (!await ensureConnected()) {
+                if (fromQueue) {
+                    enqueueCommand(command, { priority: true });
+                } else {
+                    enqueueCommand(command);
+                    showSnackbar('Device reconnecting, command queued', 'warning');
+                    updateConnectionStatus('connecting');
+                    setControlsEnabled(false);
+                }
+                return false;
+            }
+
+            try {
+                await writeCommand(command);
+
+                const logMessage = fromQueue
+                    ? `Queued command sent: ${command}`
+                    : `Sent: ${command}`;
+
+                addLogEntry(logMessage, 'send');
+                debugLog('Command sent successfully', { fromQueue });
+                return true;
 
             } catch (error) {
                 console.error('Send error:', error);
-                addLogEntry(`Send failed: ${error.message}`, 'error');
-                showSnackbar(`Failed to send command: ${error.message}`, 'error');
+                debugLog('Send command error details:', error);
+
+                const isExpectedActivationDrop =
+                    command === 'TURN_ON' &&
+                    (error.name === 'NotSupportedError' || error.name === 'NetworkError');
+
+                if (isExpectedActivationDrop) {
+                    addLogEntry('Activation triggered device reboot - waiting for reconnect', 'warning');
+                    showSnackbar('Device restarting after activation...', 'info');
+                    enqueueCommand(command, { priority: true });
+                } else if (!fromQueue) {
+                    addLogEntry(`Send failed: ${error.message}`, 'error');
+                    showSnackbar(`Failed to send command: ${error.message}`, 'error');
+                } else {
+                    enqueueCommand(command, { priority: true });
+                }
+
+                isConnected = false;
+                rxCharacteristic = null;
+                txCharacteristic = null;
+                stopConnectionMonitor();
+                setControlsEnabled(false);
+                updateConnectionStatus('connecting');
+
+                if (!reconnecting) {
+                    attemptReconnect();
+                }
+
+                return false;
             }
         }
 
@@ -1064,11 +1519,11 @@
             const lower = response.toLowerCase();
 
             if (lower.includes('on')) {
-                ledIndicator.classList.remove('off');
-                ledIndicator.classList.add('on');
+                vibrationIndicator.classList.remove('off');
+                vibrationIndicator.classList.add('on');
             } else if (lower.includes('off')) {
-                ledIndicator.classList.remove('on');
-                ledIndicator.classList.add('off');
+                vibrationIndicator.classList.remove('on');
+                vibrationIndicator.classList.add('off');
             }
 
             // Parse time if present (format: HH:MM:SS)
@@ -1182,7 +1637,8 @@
             const icons = {
                 'success': 'check_circle',
                 'error': 'error',
-                'info': 'info'
+                'info': 'info',
+                'warning': 'warning'
             };
 
             snackbarIcon.textContent = icons[type] || 'info';
